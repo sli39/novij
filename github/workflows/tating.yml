@@ -1,0 +1,12 @@
+name: Test React App
+on: push
+jobs:
+  test:
+    runs-ob: ubuntu-latest
+    steps:
+      - name: Get reposit code
+      - uses: actions/checkout@v6
+      - name: Install dependecies
+        run: pnpm ci
+      - name: Test application
+        run: pnpm run test

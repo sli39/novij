@@ -17,41 +17,27 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      # 1. Проверка кода
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Установка Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'pnpm'
 
-      # 3. Установка pnpm
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+      - name: Install pnpm
+        run: npm install -g pnpm@8
 
-      # 4. Проверка версии pnpm
-      - name: Check pnpm version
-        run: pnpm -v
-
-      # 5. Установка зависимостей
       - name: Install dependencies
         run: pnpm install
 
-      # 6. Сборка проекта
       - name: Build project
         run: pnpm run build
 
-      # 7. Проверка содержимого dist/
       - name: Verify dist contents
         run: |
           echo "=== Dist folder contents ==="
           ls -la dist/
-          echo "=== Checking for index.html ==="
           if [ -f "dist/index.html" ]; then
             echo "✅ index.html found!"
           else
@@ -59,17 +45,14 @@ jobs:
             exit 1
           fi
 
-      # 8. Настройка GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
-      # 9. Загрузка артефактов для Pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
-      # 10. Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
